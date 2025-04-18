@@ -208,20 +208,20 @@ https://leetcode.com/problems/project-employees-i/description/
     USING (employee_id)
     GROUP BY 1; 
 
-#### Problem 19
+#### Problem 20
 `Sales analysis III `
 https://leetcode.com/problems/project-employees-i/description/
 
 
-USE mydb;
-SELECT p.product_id, p.product_name
-FROM Product as p
-INNER JOIN Sales as s USING (product_id)
-GROUP BY 1, 2
-HAVING SUM(
-    s.sale_date < '2019-01-01'
-    OR s.sale_date > '2019-03-31'
-  ) = 0;
+    USE mydb;
+    SELECT p.product_id, p.product_name
+    FROM Product as p
+    INNER JOIN Sales as s USING (product_id)
+    GROUP BY 1, 2
+    HAVING SUM(
+        s.sale_date < '2019-01-01'
+        OR s.sale_date > '2019-03-31'
+    ) = 0;
 
 
 
