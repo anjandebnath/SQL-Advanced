@@ -15,5 +15,46 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+
+  mysql_master:
+    image: mysql:8.0
+    env_file:
+      - ./master/mysql_master.env
+    container_name: "mysql_master"
+    # Extra commands to configure the master for replication
+    command: --server-id=1 --log-bin=mysql-bin --binlog-format=row
+    restart: "no"
+    ports:
+      - 4406:3306
+    volumes:
+      - ./master/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf
+      - ./master/data:/var/lib/mysql
+    networks:
+      - overlay  
+
+
+
+  mysql_slave:
+    image: mysql:8.0
+    env_file:
+      - ./slave/mysql_slave.env
+    container_name: "mysql_slave"
+    # This tells the replica to wait for the master to be ready before starting
+    depends_on:
+      - mysql_master
+    # Similar commands and environment variables as the master
+    command: --server-id=2 --log-bin=mysql-bin --binlog-format=row
+    restart: "no"
+    ports:
+      - 5506:3306
+    volumes:
+      - ./slave/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf
+      - ./slave/data:/var/lib/mysql
+    networks:
+      - overlay      
+
 volumes:
   mysql_data:
+
+networks:
+  overlay:  
